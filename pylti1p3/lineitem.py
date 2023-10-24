@@ -17,6 +17,15 @@ TSubmissionReview = te.TypedDict(
     total=False,
 )
 
+TSubmissionType = te.TypedDict(
+    "TSubmissionType",
+    {
+        "type": str,
+        "url": str,
+    },
+    total=False,
+)
+
 TLineItem = te.TypedDict(
     "TLineItem",
     {
@@ -29,6 +38,7 @@ TLineItem = te.TypedDict(
         "startDateTime": str,
         "endDateTime": str,
         "submissionReview": TSubmissionReview,
+        "https://canvas.instructure.com/lti/submission_type": TSubmissionType,
     },
     total=False,
 )
@@ -44,6 +54,7 @@ class LineItem:
     _start_date_time: t.Optional[str] = None
     _end_date_time: t.Optional[str] = None
     _submission_review: t.Optional[TSubmissionReview] = None
+    _submission_type: t.Optional[TSubmissionType] = None
 
     def __init__(self, lineitem: t.Optional[TLineItem] = None):
         if not lineitem:
@@ -57,6 +68,7 @@ class LineItem:
         self._start_date_time = lineitem.get("startDateTime")
         self._end_date_time = lineitem.get("endDateTime")
         self._submission_review = lineitem.get("submissionReview")
+        self._submission_type = lineitem.get("https://canvas.instructure.com/lti/submission_type")
 
     def get_id(self) -> t.Optional[str]:
         return self._id
@@ -201,5 +213,6 @@ class LineItem:
             "startDateTime": self._start_date_time,
             "endDateTime": self._end_date_time,
             "submissionReview": self._submission_review,
+            "https://canvas.instructure.com/lti/submission_type": self._submission_type,
         }
         return json.dumps({k: v for k, v in data.items() if v})
